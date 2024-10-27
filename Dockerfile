@@ -1,13 +1,13 @@
-# Usando uma imagem multi-stage para reduzir o tamanho final
+# Etapa de construção
 FROM golang:alpine AS builder
-
 WORKDIR /app
 COPY . .
 
-RUN go build -o fullcycle
+# Compilando o binário otimizado
+RUN go build -ldflags="-s -w" -o fullcycle
 
 # Imagem final menor
 FROM scratch
 COPY --from=builder /app/fullcycle /fullcycle
-
 ENTRYPOINT ["/fullcycle"]
+
